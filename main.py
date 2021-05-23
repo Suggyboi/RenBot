@@ -2,10 +2,13 @@ import discord
 import os
 import requests 
 import json 
+import weather
 
 # function names are gathered from discord.py library
 
 client = discord.Client()
+# defining weather token
+weather_token = os.environ['WEATHERTOKEN']
 
 #Returning the quote of the day from zenquotes.io
 def get_quoteofday(): 
@@ -36,6 +39,8 @@ def get_dadjoke():
 @client.event 
 async def on_ready(): #called when bot is ready to be used
   print('We have logged in as {0.user}'.format(client)) #prints username
+  # shows discord bot status as "Listening to $commands"
+  await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name='$commands'))
 
 @client.event
 #when message is recieved
@@ -61,6 +66,22 @@ async def on_message(message):
   elif message.content.startswith('$dadjoke'): 
     dadjoke = get_dadjoke()
     await message.channel.send(dadjoke)
+
+  # Get the weather of any city. 
+  if message.content.startswith('$'):
+    location = message.content.replace('$', '').lower()
+    if len(location) >= 1:
+      url = f'http://api.openweathermap.org/data/2.5/weather?q={location}&appid={weather_token}&units=metric'
+
+      try:
+        data = json.loads(requests.get(url).content)
+        data = weather.parse_data(data)
+        await message.channel.send(embed=weather.weather_message(data, location))
+      except KeyError:
+        await message.channel.send(embed=weather.error_message(location))
+
+
+
 
 
 
