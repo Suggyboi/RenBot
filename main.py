@@ -24,16 +24,6 @@ def get_randomquote():
   randomquote = json_data[0]['q'] + " -" + json_data[0]['a']#q = quote
   return(randomquote)
 
-#Returning a dadjoke in JSON format 
-def get_dadjoke():
-  headers = {
-    'x-rapidapi-key': "c52c2964famshad8b00a4de6f0aap169565jsn6b154b90ab87",
-    'x-rapidapi-host': "dad-jokes.p.rapidapi.com"
-    }
-  url = "https://dad-jokes.p.rapidapi.com/random/jokes"
-  response = requests.request("GET", url, headers=headers)
-  return(response.text)
-
 
 #decorator to register an event 
 @client.event 
@@ -62,23 +52,16 @@ async def on_message(message):
     randomquote = get_randomquote()
     await message.channel.send(randomquote)
   
-  #when bot sees this command it will send a dad joke
-  elif message.content.startswith('$dadjoke'): 
-    dadjoke = get_dadjoke()
-    await message.channel.send(dadjoke)
-
   # Get the weather of any city. 
   if message.content.startswith('$'):
     location = message.content.replace('$', '').lower()
     if len(location) >= 1:
       url = f'http://api.openweathermap.org/data/2.5/weather?q={location}&appid={weather_token}&units=metric'
 
-      try:
-        data = json.loads(requests.get(url).content)
-        data = weather.parse_data(data)
-        await message.channel.send(embed=weather.weather_message(data, location))
-      except KeyError:
-        await message.channel.send(embed=weather.error_message(location))
+      data = json.loads(requests.get(url).content)
+      data = weather.parse_data(data)
+      await message.channel.send(embed=weather.weather_message(data, location))
+
 
 
 

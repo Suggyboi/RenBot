@@ -28,12 +28,3 @@ def weather_message(data, location):
       inline=False #formats into a vertical table
     )
   return message 
-
-#error message if someone types in invalid location
-def error_message(location):
-  location = location.title()
-  return discord.embed(
-    title='Error', 
-    description=f'There was an error retrieving weather data for {location}.'
-    
-  )
