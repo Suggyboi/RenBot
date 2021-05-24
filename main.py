@@ -53,8 +53,8 @@ async def on_message(message):
     await message.channel.send(randomquote)
   
   # Get the weather of any city. 
-  if message.content.startswith('$'):
-    location = message.content.replace('$', '').lower()
+  if message.content.startswith('$w.'):
+    location = message.content.replace('$w.', '').lower()
     if len(location) >= 1:
       url = f'http://api.openweathermap.org/data/2.5/weather?q={location}&appid={weather_token}&units=metric'
 
