@@ -37,18 +37,18 @@ async def on_ready(): #called when bot is ready to be used
 async def on_message(message): 
   if message.author == client.user:
     return 
-  
+
   #when bot sees this command it will send a message
   if message.content.startswith('$hello'):
     await message.channel.send('Hello! {}'.format(message.author))
 
   #when bot sees this command it will send quote of the day 
-  elif message.content.startswith('$quoteofday'): 
+  if message.content.startswith('$quoteofday'): 
     quoteofday = get_quoteofday()
     await message.channel.send(quoteofday)
 
   #when bot sees this command it will send a random quote 
-  elif message.content.startswith('$quoterandom'): 
+  if message.content.startswith('$quoterandom'): 
     randomquote = get_randomquote()
     await message.channel.send(randomquote)
   
@@ -57,10 +57,12 @@ async def on_message(message):
     location = message.content.replace('$w.', '').lower()
     if len(location) >= 1:
       url = f'http://api.openweathermap.org/data/2.5/weather?q={location}&appid={weather_token}&units=metric'
-
-      data = json.loads(requests.get(url).content)
-      data = weather.parse_data(data)
-      await message.channel.send(embed=weather.weather_message(data, location))
+      try:
+          data = json.loads(requests.get(url).content)
+          data = weather.parse_data(data)
+          await message.channel.send(embed=weather.weather_message(data, location))
+      except KeyError:
+        await message.channel.send(embed=weather.error_message(location))
 
 
 

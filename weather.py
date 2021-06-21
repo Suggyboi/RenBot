@@ -28,3 +28,11 @@ def weather_message(data, location):
       inline=False #formats into a vertical table
     )
   return message 
+
+# For invalid locations, send error message
+def error_message(location):
+  location = location.title()
+  return discord.Embed(
+    title='Error', 
+    description=f'You have inputted an incorrect location. Can not retrieve {location}.'
+  )
