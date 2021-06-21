@@ -64,6 +64,11 @@ async def on_message(message):
       except KeyError:
         await message.channel.send(embed=weather.error_message(location))
 
+  # List of commands 
+  if message.content.startswith('$commands'):
+    commandstxt = open("commands.txt", "r")
+    listcommands = commandstxt.read()
+    await message.channel.send(listcommands)
 
 
 

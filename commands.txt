@@ -1,0 +1,3 @@
+$quoteofday - Quote Of The Day 
+$quoterandom - Random Quote 
+$w.locationname - Weather of location. Example: w.Dublin = Dublin Weather
